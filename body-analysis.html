@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>InterviewAI - Body Language</title>
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body class="body-analysis-page">
+
+  <div class="dashboard-container">
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+      <h2><i class="fa-solid fa-user-tie brand-icon"></i>InterviewAI</h2>
+      <nav>
+        <a href="resume.html" class="nav-link"><i class="fa-regular fa-file-lines icon-left"></i>Resume Analysis</a>
+        <a href="body-analysis.html" class="nav-link active"><i class="fa-solid fa-video icon-left"></i>Body Language</a>
+        <a href="practice.html" class="nav-link"><i class="fa-solid fa-microphone icon-left"></i>AI Mock Questions</a>
+        <a href="applications.html" class="nav-link"><i class="fa-solid fa-table-list icon-left"></i>Applications</a>
+        <a href="scores.html" class="nav-link"><i class="fa-solid fa-chart-column icon-left"></i>Dashboard</a>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="sidebar-branding">
+          <img src="assets/christ-logo.png" alt="Christ University logo" class="sidebar-brand-logo" />
+          <p class="sidebar-brand-text">An Initiative by students of Christ University Yeshwanthpur</p>
+        </div>
+        <button id="logout-btn" class="btn-logout">Logout</button>
+      </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+
+      <div class="welcome-bar">
+        <h1><i class="fa-solid fa-video icon-left"></i>Body Language</h1>
+        <p class="student-email">Practice your posture, eye contact and confidence on camera</p>
+      </div>
+
+      <div class="body-grid">
+
+        <!-- LEFT: Camera -->
+        <div class="card camera-card">
+          <h2><i class="fa-solid fa-camera icon-left"></i>Live Camera Feed</h2>
+          <p class="card-subtitle">Your body language will be analysed in real time</p>
+
+          <div class="camera-box" id="camera-box">
+            <video id="camera-feed" autoplay playsinline></video>
+
+            <div class="metrics-overlay">
+              <h2><i class="fa-solid fa-gauge-high icon-left"></i>Live Metrics</h2>
+              <p class="card-subtitle">Updates as you move</p>
+
+              <div class="metrics-grid">
+                <div class="metric-box">
+                  <div class="metric-icon"><i class="fa-solid fa-person"></i></div>
+                  <div class="metric-label">Shoulder Angle</div>
+                  <div class="metric-value" id="posture-value">—</div>
+                </div>
+                <div class="metric-box">
+                  <div class="metric-icon"><i class="fa-solid fa-eye"></i></div>
+                  <div class="metric-label">Head Tilt</div>
+                  <div class="metric-value" id="eye-value">—</div>
+                </div>
+                <div class="metric-box">
+                  <div class="metric-icon"><i class="fa-solid fa-shield-heart"></i></div>
+                  <div class="metric-label">Head Motion</div>
+                  <div class="metric-value" id="confidence-value">—</div>
+                </div>
+                <div class="metric-box">
+                  <div class="metric-icon"><i class="fa-solid fa-face-smile"></i></div>
+                  <div class="metric-label">Eye Contact Score</div>
+                  <div class="metric-value" id="expression-value">—</div>
+                </div>
+              </div>
+
+              <div class="body-score-row" style="margin-top:10px;">
+                <span>Posture Status:</span>
+                <span class="rating-badge" id="posture-status-value">—</span>
+              </div>
+
+              <div class="body-score-row" style="margin-top:8px;">
+                <span>Excessive Looking Away:</span>
+                <span class="rating-badge" id="looking-away-value">—</span>
+              </div>
+            </div>
+
+            <!-- Overlay when camera is off -->
+            <div class="camera-overlay" id="camera-overlay">
+              <div class="camera-icon-animation"><i class="fa-solid fa-camera"></i></div>
+              <p>Camera is off</p>
+              <button id="start-camera-btn" class="btn-primary">Start Camera</button>
+            </div>
+
+            <!-- Live indicator when camera is on -->
+            <div class="live-badge" id="live-badge" style="display:none;">
+              <span class="live-dot"></span> LIVE
+            </div>
+
+            <!-- Pose landmarks overlay -->
+            <canvas id="pose-canvas"></canvas>
+          </div>
+
+          <div style="display:flex; gap:12px; margin-top:16px;">
+            <button id="stop-camera-btn" class="btn-secondary" style="display:none;"><i class="fa-solid fa-stop icon-left"></i>Stop Camera</button>
+          </div>
+
+          <div class="upload-video-panel">
+            <p class="card-subtitle" style="margin-bottom:10px;">Or analyze a prerecorded video</p>
+            <label for="video-upload-input" class="btn-secondary" style="display:inline-block; cursor:pointer;"><i class="fa-solid fa-folder-open icon-left"></i>Choose Video</label>
+            <input type="file" id="video-upload-input" accept="video/*" hidden />
+            <p id="video-file-name" class="file-hint" style="margin-top:8px;">No file selected</p>
+            <button id="analyze-upload-btn" class="btn-primary" style="width:auto; padding:12px 28px; margin-top:10px;"><i class="fa-solid fa-film icon-left"></i>Analyze Uploaded Video</button>
+          </div>
+        </div>
+
+        <!-- Feedback -->
+        <div style="display:flex; flex-direction:column; gap:24px;">
+          <div class="card">
+            <h2><i class="fa-solid fa-message icon-left"></i>Body Language Feedback</h2>
+            <p class="card-subtitle">Feedback appears after you stop the camera or analyze an uploaded video</p>
+
+            <div id="body-feedback-placeholder" class="feedback-placeholder">
+              <div class="placeholder-icon"><i class="fa-solid fa-brain"></i></div>
+              <p>Start your camera and click Analyze Now to receive AI feedback on your body language</p>
+            </div>
+
+            <div id="body-feedback-result" style="display:none;">
+              <div class="body-score-row">
+                <span>Overall Score:</span>
+                <span class="rating-badge" id="body-score-badge">—</span>
+              </div>
+              <div class="body-score-row" style="margin-top:10px;">
+                <span>Final Eye Contact Score:</span>
+                <span class="rating-badge" id="final-eye-contact-score">—</span>
+              </div>
+              <div class="feedback-text" id="body-feedback-text" style="margin-top:12px;"></div>
+
+              <div class="result-section">
+                <h3 style="margin-bottom:10px;"><i class="fa-solid fa-lightbulb icon-left"></i>Tips to Improve</h3>
+                <ul class="result-list" id="body-tips-list"></ul>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="js/body-analysis.js"></script>
+  <script src="js/theme-toggle.js"></script>
+
+</body>
+</html>

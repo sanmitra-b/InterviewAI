@@ -1,0 +1,29 @@
+# Secrets
+.env
+.env.*
+firebase_key.json
+certs/
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg-info/
+.venv/
+venv/
+
+# Local model/cache artifacts
+.models/
+
+# OS/editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Logs and temp
+*.log
+*.tmp
+*.temp

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>InterviewAI - Dashboard</title>
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <div class="dashboard-container">
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+      <h2><i class="fa-solid fa-user-tie brand-icon"></i>InterviewAI</h2>
+      <nav>
+        <a href="resume.html" class="nav-link"><i class="fa-regular fa-file-lines icon-left"></i>Resume Analysis</a>
+        <a href="body-analysis.html" class="nav-link"><i class="fa-solid fa-video icon-left"></i>Body Language</a>
+        <a href="practice.html" class="nav-link"><i class="fa-solid fa-microphone icon-left"></i>AI Mock Questions</a>
+        <a href="applications.html" class="nav-link"><i class="fa-solid fa-table-list icon-left"></i>Applications</a>
+        <a href="scores.html" class="nav-link active"><i class="fa-solid fa-chart-column icon-left"></i>Dashboard</a>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="sidebar-branding">
+          <img src="assets/christ-logo.png" alt="Christ University logo" class="sidebar-brand-logo" />
+          <p class="sidebar-brand-text">An Initiative by students of Christ University Yeshwanthpur</p>
+        </div>
+        <button id="logout-btn" class="btn-logout">Logout</button>
+      </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+
+      <div class="welcome-bar">
+        <h1><i class="fa-solid fa-chart-column icon-left"></i>Dashboard</h1>
+        <p class="student-email">Your overall interview readiness report</p>
+      </div>
+
+      <!-- OVERALL SCORE BANNER -->
+      <div class="card overall-banner">
+        <div class="overall-left">
+          <p class="overall-label">Overall Readiness Score</p>
+          <div class="overall-score-display">
+            <span id="overall-score">—</span>
+            <span class="overall-max">/10</span>
+          </div>
+          <p id="overall-message" class="overall-message">Complete all sections to see your score</p>
+        </div>
+        <div class="overall-right">
+          <div class="readiness-bar-container">
+            <div class="readiness-bar" id="readiness-bar" style="width: 0%"></div>
+          </div>
+          <p id="readiness-percent" class="readiness-percent">0%</p>
+        </div>
+      </div>
+
+      <!-- SCORE CARDS -->
+      <div class="scores-grid">
+
+        <!-- Resume Score -->
+        <div class="card score-detail-card">
+          <div class="score-card-header">
+            <span class="score-card-icon"><i class="fa-regular fa-file-lines"></i></span>
+            <div>
+              <h3>Resume Analysis</h3>
+              <p class="card-subtitle" style="margin:0;">AI-powered resume analysis</p>
+            </div>
+            <span class="score-pill" id="resume-score-pill">—</span>
+          </div>
+          <div class="score-bar-wrap">
+            <div class="score-bar">
+              <div class="score-bar-fill" id="resume-bar" style="width:0%"></div>
+            </div>
+          </div>
+          <p id="resume-score-msg" class="score-msg">Upload your resume to get a score</p>
+          <a href="resume.html" class="score-action-link">Go to Resume Analysis →</a>
+        </div>
+
+        <!-- Resume Match Score -->
+        <div class="card score-detail-card">
+          <div class="score-card-header">
+            <span class="score-card-icon"><i class="fa-solid fa-percent"></i></span>
+            <div>
+              <h3>Resume Match</h3>
+              <p class="card-subtitle" style="margin:0;">Job description match percentage</p>
+            </div>
+            <span class="score-pill" id="match-score-pill">—</span>
+          </div>
+          <div class="score-bar-wrap">
+            <div class="score-bar">
+              <div class="score-bar-fill" id="match-bar" style="width:0%"></div>
+            </div>
+          </div>
+          <p id="match-score-msg" class="score-msg">Run a match score on your resume</p>
+          <a href="resume.html" class="score-action-link">Go to Resume Analysis →</a>
+        </div>
+
+        <!-- Practice Score -->
+        <div class="card score-detail-card">
+          <div class="score-card-header">
+            <span class="score-card-icon"><i class="fa-solid fa-microphone"></i></span>
+            <div>
+              <h3>AI Mock Questions</h3>
+              <p class="card-subtitle" style="margin:0;">Your last answer score</p>
+            </div>
+            <span class="score-pill" id="practice-score-pill">—</span>
+          </div>
+          <div class="score-bar-wrap">
+            <div class="score-bar">
+              <div class="score-bar-fill" id="practice-bar" style="width:0%"></div>
+            </div>
+          </div>
+          <p id="practice-score-msg" class="score-msg">Answer an AI mock question to get a score</p>
+          <a href="practice.html" class="score-action-link">Go to Practice →</a>
+        </div>
+
+        <!-- Body Language Score -->
+        <div class="card score-detail-card">
+          <div class="score-card-header">
+            <span class="score-card-icon"><i class="fa-solid fa-video"></i></span>
+            <div>
+              <h3>Body Language</h3>
+              <p class="card-subtitle" style="margin:0;">Posture and confidence score</p>
+            </div>
+            <span class="score-pill" id="body-score-pill">—</span>
+          </div>
+          <div class="score-bar-wrap">
+            <div class="score-bar">
+              <div class="score-bar-fill" id="body-bar" style="width:0%"></div>
+            </div>
+          </div>
+          <p id="body-score-msg" class="score-msg">Complete a body language session</p>
+          <a href="body-analysis.html" class="score-action-link">Go to Body Language →</a>
+        </div>
+
+      </div>
+
+      <!-- TIPS SECTION -->
+      <div class="card">
+        <h2><i class="fa-solid fa-lightbulb icon-left"></i>Tips to Improve</h2>
+        <p class="card-subtitle">Based on your scores</p>
+        <div id="tips-list" class="tips-container">
+          <p style="color:#555;">Complete all sections to get personalised tips.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script type="module" src="js/scores.js"></script>
+  <script src="js/theme-toggle.js"></script>
+
+</body>
+</html>

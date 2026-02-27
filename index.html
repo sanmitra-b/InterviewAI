@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>InterviewAI - Login</title>
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body class="login-page">
+
+  <div class="auth-container">
+    <div class="auth-box">
+
+      <h1><i class="fa-solid fa-user-tie brand-icon"></i>InterviewAI</h1>
+      <p class="subtitle">A Students Initiative at Christ University Yeswanthpur</p>
+
+      <div id="error-message" class="error-msg"></div>
+
+      <form id="login-form">
+        <input type="email" id="login-email" placeholder="Email" required />
+        <input type="password" id="login-password" placeholder="Password" required />
+        <button type="submit" class="btn-primary"><i class="fa-solid fa-right-to-bracket icon-left"></i>Login</button>
+      </form>
+
+      <div class="divider">or</div>
+
+      <button id="google-login-btn" class="btn-google">
+        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" />
+        Sign in with Google
+      </button>
+
+      <p class="switch-auth">Don't have an account? <a href="signup.html">Sign Up</a></p>
+
+    </div>
+  </div>
+
+  <script type="module" src="js/auth.js"></script>
+  <script src="js/theme-toggle.js"></script>
+
+</body>
+</html>

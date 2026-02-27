@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>InterviewAI - AI Mock Questions</title>
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <div class="dashboard-container">
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+      <h2><i class="fa-solid fa-user-tie brand-icon"></i>InterviewAI</h2>
+      <nav>
+        <a href="resume.html" class="nav-link"><i class="fa-regular fa-file-lines icon-left"></i>Resume Analysis</a>
+        <a href="body-analysis.html" class="nav-link"><i class="fa-solid fa-video icon-left"></i>Body Language</a>
+        <a href="practice.html" class="nav-link active"><i class="fa-solid fa-microphone icon-left"></i>AI Mock Questions</a>
+        <a href="applications.html" class="nav-link"><i class="fa-solid fa-table-list icon-left"></i>Applications</a>
+        <a href="scores.html" class="nav-link"><i class="fa-solid fa-chart-column icon-left"></i>Dashboard</a>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="sidebar-branding">
+          <img src="assets/christ-logo.png" alt="Christ University logo" class="sidebar-brand-logo" />
+          <p class="sidebar-brand-text">An Initiative by students of Christ University Yeshwanthpur</p>
+        </div>
+        <button id="logout-btn" class="btn-logout">Logout</button>
+      </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+
+      <div class="welcome-bar">
+        <h1><i class="fa-solid fa-microphone icon-left"></i>AI Mock Questions</h1>
+        <p class="student-email">Choose your job role and answer questions using your voice</p>
+      </div>
+
+      <!-- STEP 1: Job Role Selection -->
+      <div class="card" id="role-selection-card">
+        <h2><i class="fa-solid fa-briefcase icon-left"></i>Select Your Job Role</h2>
+        <p class="card-subtitle">Choose role, upload resume PDF, then start your interview</p>
+
+        <div class="role-grid">
+          <div class="role-card" data-role="Data Analyst">
+            <div class="role-icon"><i class="fa-solid fa-chart-line"></i></div>
+            <h3>Data Analyst</h3>
+            <p>SQL, Dashboarding, KPIs, Data Storytelling</p>
+          </div>
+          <div class="role-card" data-role="ML Engineer">
+            <div class="role-icon"><i class="fa-solid fa-robot"></i></div>
+            <h3>ML Engineer</h3>
+            <p>MLOps, Deployment, Monitoring, Scaling</p>
+          </div>
+          <div class="role-card" data-role="Accountant">
+            <div class="role-icon"><i class="fa-solid fa-calculator"></i></div>
+            <h3>Accountant</h3>
+            <p>Financial Reporting, Reconciliation, Compliance</p>
+          </div>
+        </div>
+
+        <div class="upload-area" style="margin-top:18px;">
+          <p>Upload your resume (PDF)</p>
+          <label for="practice-resume-input" class="btn-primary"><i class="fa-solid fa-file-arrow-up icon-left"></i>Choose Resume PDF</label>
+          <input type="file" id="practice-resume-input" accept=".pdf" hidden />
+          <p id="practice-resume-name" class="file-hint">No file selected</p>
+        </div>
+
+        <div style="display:flex; gap:12px; margin-top:16px; align-items:center; flex-wrap:wrap;">
+          <button id="start-interview-btn" class="btn-primary" style="width:auto; padding:12px 24px; margin-bottom:0;" disabled>
+            <i class="fa-solid fa-play icon-left"></i>Start Interview
+          </button>
+          <p id="setup-status" class="card-subtitle" style="margin-bottom:0;"></p>
+        </div>
+      </div>
+
+      <!-- STEP 2: Questions + Answer (shown after role selected) -->
+      <div id="practice-section" style="display:none;">
+
+        <div class="selected-role-bar">
+          <span id="selected-role-label">Data Analyst</span>
+          <span id="question-progress" style="font-weight:500; color:inherit;">Question 1 / 4</span>
+          <button id="change-role-btn" class="btn-secondary" style="padding:8px 16px; font-size:0.85rem;">Change Role</button>
+        </div>
+
+        <div class="practice-grid">
+
+          <!-- LEFT: Questions from Flask -->
+          <div class="card">
+            <h2><i class="fa-regular fa-comments icon-left"></i>Interview Questions</h2>
+            <p class="card-subtitle">Click a question to practice</p>
+
+            <div id="questions-loading" class="feedback-placeholder">
+              <div class="placeholder-icon"><i class="fa-solid fa-spinner fa-spin"></i></div>
+              <p>Loading questions...</p>
+            </div>
+
+            <div class="question-list" id="question-list" style="display:none;"></div>
+          </div>
+
+          <!-- RIGHT: Speech Answer -->
+          <div style="display:flex; flex-direction:column; gap:24px;">
+
+            <div class="card">
+              <h2><i class="fa-solid fa-comment-dots icon-left"></i>Your Answer</h2>
+
+              <div id="no-question-msg" class="feedback-placeholder">
+                <div class="placeholder-icon"><i class="fa-solid fa-circle-info"></i></div>
+                <p>Select a question from the left to begin</p>
+              </div>
+
+              <div id="answer-section" style="display:none;">
+                <div class="selected-question-display">
+                  <p class="selected-label">Current Question:</p>
+                  <p id="current-question" class="selected-question"></p>
+                </div>
+
+                <button id="speak-question-btn" class="btn-secondary" style="margin-bottom:14px; width:auto;">
+                  <i class="fa-solid fa-volume-high icon-left"></i>Read Question Aloud
+                </button>
+
+                <div class="speech-controls">
+                  <button id="record-btn" class="btn-record">
+                    <span class="record-icon"><i class="fa-solid fa-microphone"></i></span>
+                    <span id="record-label">Start Speaking</span>
+                  </button>
+                  <div id="recording-indicator" style="display:none;">
+                    <div class="recording-waves">
+                      <span></span><span></span><span></span><span></span><span></span>
+                    </div>
+                    <p class="recording-text">Listening...</p>
+                  </div>
+                </div>
+
+                <div style="margin-top:16px;">
+                  <p class="selected-label">Your spoken answer:</p>
+                  <div class="transcript-box">
+                    <p id="transcript-text" style="color:#666;">Your answer will appear here as you speak...</p>
+                  </div>
+                </div>
+
+                <div style="display:flex; gap:12px; margin-top:16px;">
+                  <button id="submit-speech-btn" class="btn-primary" style="width:auto; padding:12px 28px;">Submit for Feedback</button>
+                  <button id="next-question-btn" class="btn-primary" style="width:auto; padding:12px 28px; display:none;">Next Question</button>
+                  <button id="clear-btn" class="btn-secondary">Clear</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Feedback Card -->
+            <div class="card" id="feedback-card" style="display:none;">
+              <h2><i class="fa-solid fa-lightbulb icon-left"></i>AI Feedback</h2>
+              <div class="body-score-row" style="margin-bottom:16px;">
+                <span>Answer Score:</span>
+                <span class="rating-badge">—</span>
+              </div>
+              <div class="result-section">
+                <h3>Strengths</h3>
+                <ul class="result-list"></ul>
+              </div>
+              <div class="result-section">
+                <h3>Improvements</h3>
+                <ul class="result-list"></ul>
+              </div>
+              <div class="result-section">
+                <h3>Overall Feedback</h3>
+                <p class="feedback-text"></p>
+              </div>
+              <div class="result-section">
+                <h3>Sample Answer</h3>
+                <p class="feedback-text"></p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script type="module" src="js/practice.js"></script>
+  <script src="js/theme-toggle.js"></script>
+</body>
+</html>
