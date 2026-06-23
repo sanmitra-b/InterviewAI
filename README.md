@@ -15,14 +15,13 @@ The app uses a **static HTML/CSS/JS frontend**, **Firebase (Auth + Firestore)** 
 
 ### AI Resume Analysis, Body Language Analysis, Mock Interview & Dashboard
 
-A full video demonstration of the application's features.
-
-![Resume Analysis and Body Language Analysis](assets/Demo.mp4)
-
 Here is a snapshot of the AI-powered mock interview session and the performance dashboard.
 
+![Resume Scoring](assets/ResumeAnalysis.png)
+![Body Language Analysis](assets/BodyLang.png)
 ![AI Mock Questions](assets/MockQuestions.png)
 ![Dashboard](assets/Dashboard.png)
+
 
 ---
 
