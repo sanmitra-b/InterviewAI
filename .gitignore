@@ -2,6 +2,7 @@
 .env
 .env.*
 firebase_key.json
+js/env.js
 certs/
 
 # Python

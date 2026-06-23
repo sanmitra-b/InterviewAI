@@ -2,8 +2,28 @@ import { auth, db } from "./firebase-config.js";
 import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
 import { doc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
 
-// Backend API base for Flask endpoints.
-const FLASK_URL = "http://localhost:5000";
+// Backend API candidates for local environments.
+const API_BASE_URLS = [
+  "http://127.0.0.1:5001",
+  "http://localhost:5001",
+  "http://127.0.0.1:5000",
+  "http://localhost:5000"
+];
+let activeApiBaseUrl = API_BASE_URLS[0];
+
+async function fetchWithApiFallback(path, options) {
+  let lastError = null;
+  for (const baseUrl of API_BASE_URLS) {
+    try {
+      const response = await fetch(`${baseUrl}${path}`, options);
+      activeApiBaseUrl = baseUrl;
+      return response;
+    } catch (error) {
+      lastError = error;
+    }
+  }
+  throw lastError || new Error("Failed to fetch");
+}
 let currentUser = null;
 let uploadedFile = null;
 
@@ -66,16 +86,19 @@ async function analyzeResume(type) {
     formData.append("job_description", document.getElementById("job-description").value);
     formData.append("type", type);
 
-    const response = await fetch(`${FLASK_URL}/scan-resume`, {
+    const response = await fetchWithApiFallback("/scan-resume", {
       method: "POST",
       body: formData
     });
 
-    if (!response.ok) {
-      throw new Error(`Server error: ${response.status}`);
-    }
+    const data = await response.json().catch(() => null);
 
-    const data = await response.json();
+    if (!response.ok) {
+      const serverMessage = data?.error
+        ? `Error: ${data.error}`
+        : `Server error: ${response.status}`;
+      throw new Error(serverMessage);
+    }
 
     if (data.error) {
       showStatus(`Error: ${data.error}`, "error");
@@ -134,7 +157,7 @@ async function analyzeResume(type) {
     showResults(data, type);
 
   } catch (err) {
-    showStatus("Could not connect to Flask server. Make sure your teammate has it running.", "error");
+    showStatus(err?.message || "Could not connect to Flask server. Make sure your teammate has it running.", "error");
   }
 }
 

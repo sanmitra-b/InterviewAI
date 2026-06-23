@@ -2,8 +2,29 @@ import { auth, db } from "./firebase-config.js";
 import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
 import { doc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
 
-// Backend host and target question count for each interview session.
-const FLASK_URL = "http://localhost:5000";
+// Backend host candidates and target question count for each interview session.
+const API_BASE_URLS = [
+  "http://127.0.0.1:5001",
+  "http://localhost:5001",
+  "http://127.0.0.1:5000",
+  "http://localhost:5000"
+];
+let activeApiBaseUrl = API_BASE_URLS[0];
+
+async function fetchWithApiFallback(path, options) {
+  let lastError = null;
+  for (const baseUrl of API_BASE_URLS) {
+    try {
+      const response = await fetch(`${baseUrl}${path}`, options);
+      activeApiBaseUrl = baseUrl;
+      return response;
+    } catch (error) {
+      lastError = error;
+    }
+  }
+  throw lastError || new Error("Failed to fetch");
+}
+
 const QUESTIONS_PER_SESSION = 4;
 
 let currentUser = null;
@@ -185,7 +206,7 @@ async function uploadResumeAndExtractText(file) {
   const formData = new FormData();
   formData.append("resume", file);
 
-  const response = await fetch(`${FLASK_URL}/upload-resume`, {
+  const response = await fetchWithApiFallback("/upload-resume", {
     method: "POST",
     body: formData
   });
@@ -201,7 +222,7 @@ async function uploadResumeAndExtractText(file) {
 
 async function generateQuestions(role, resumeText) {
   // Request role-specific questions based on resume context.
-  const response = await fetch(`${FLASK_URL}/generate-questions`, {
+  const response = await fetchWithApiFallback("/generate-questions", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ role, resume_text: resumeText, count: QUESTIONS_PER_SESSION })
@@ -401,7 +422,7 @@ async function submitAnswerForFeedback() {
     </div>`;
 
   try {
-    const response = await fetch(`${FLASK_URL}/evaluate-answer`, {
+    const response = await fetchWithApiFallback("/evaluate-answer", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ question, answer, role: sessionState.role })
@@ -492,7 +513,7 @@ async function finishSession() {
       started_at: sessionState.startedAt
     };
 
-    const response = await fetch(`${FLASK_URL}/save-session`, {
+    const response = await fetchWithApiFallback("/save-session", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload)

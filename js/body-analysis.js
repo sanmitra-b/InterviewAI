@@ -3,8 +3,29 @@ import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/
 import { doc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
 import { FilesetResolver, PoseLandmarker, FaceLandmarker } from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14";
 
-// Flask endpoint and analysis thresholds used by client-side MediaPipe scoring.
-const FLASK_URL = "http://localhost:5000";
+// Flask endpoint candidates and analysis thresholds used by client-side MediaPipe scoring.
+const API_BASE_URLS = [
+  "http://127.0.0.1:5001",
+  "http://localhost:5001",
+  "http://127.0.0.1:5000",
+  "http://localhost:5000"
+];
+let activeApiBaseUrl = API_BASE_URLS[0];
+
+async function fetchWithApiFallback(path, options) {
+  let lastError = null;
+  for (const baseUrl of API_BASE_URLS) {
+    try {
+      const response = await fetch(`${baseUrl}${path}`, options);
+      activeApiBaseUrl = baseUrl;
+      return response;
+    } catch (error) {
+      lastError = error;
+    }
+  }
+  throw lastError || new Error("Failed to fetch");
+}
+
 const BODY_ANALYSIS_THRESHOLDS = {
   face: {
     minLandmarks: 10,
@@ -157,7 +178,7 @@ async function closeLiveBackendSession() {
   if (!liveSessionId) return;
 
   try {
-    await fetch(`${FLASK_URL}/end-body-session`, {
+    await fetchWithApiFallback("/end-body-session", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ sessionId: liveSessionId })
@@ -671,7 +692,7 @@ async function finalizeLiveSession() {
   setLoadingState("Generating final body language feedback...");
 
   try {
-    const response = await fetch(`${FLASK_URL}/summarize-body-session`, {
+    const response = await fetchWithApiFallback("/summarize-body-session", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ metrics: liveMetricsHistory })
@@ -759,35 +780,39 @@ async function showBodyFeedback(data, source = "unknown") {
     tipsList.innerHTML = data.tips.map(t => `<li>${t}</li>`).join("");
   }
 
-  // Save score to Firestore
+  // Save score to Firestore without breaking rendered feedback if persistence fails.
   if (currentUser && !Number.isNaN(score)) {
-    const now = new Date();
-    const sessionId = createSessionId();
-    const studentRef = doc(db, "students", currentUser.uid);
-    const sessionRef = doc(db, "students", currentUser.uid, "sessions", sessionId);
+    try {
+      const now = new Date();
+      const sessionId = createSessionId();
+      const studentRef = doc(db, "students", currentUser.uid);
+      const sessionRef = doc(db, "students", currentUser.uid, "sessions", sessionId);
 
-    await setDoc(studentRef, {
-      bodyScore: score,
-      bodyFeedback: data.feedback || "",
-      bodyLiveMetrics: data.live_metrics || {},
-      bodyAverages: data.averages || {},
-      bodyTopIssues: data.top_issues || [],
-      updatedAt: now
-    }, { merge: true });
+      await setDoc(studentRef, {
+        bodyScore: score,
+        bodyFeedback: data.feedback || "",
+        bodyLiveMetrics: data.live_metrics || {},
+        bodyAverages: data.averages || {},
+        bodyTopIssues: data.top_issues || [],
+        updatedAt: now
+      }, { merge: true });
 
-    await setDoc(sessionRef, {
-      sessionId,
-      module: "posture",
-      timestamp: now,
-      source: data.source || source,
-      score,
-      feedback: data.feedback || "",
-      liveMetrics: data.live_metrics || {},
-      averages: data.averages || {},
-      topIssues: data.top_issues || [],
-      tips: data.tips || [],
-      framesAnalyzed: data.frames_analyzed || 0,
-      confidence: score
-    });
+      await setDoc(sessionRef, {
+        sessionId,
+        module: "posture",
+        timestamp: now,
+        source: data.source || source,
+        score,
+        feedback: data.feedback || "",
+        liveMetrics: data.live_metrics || {},
+        averages: data.averages || {},
+        topIssues: data.top_issues || [],
+        tips: data.tips || [],
+        framesAnalyzed: data.frames_analyzed || 0,
+        confidence: score
+      });
+    } catch (err) {
+      console.warn("Body feedback rendered but could not be saved to Firestore", err);
+    }
   }
 }

@@ -11,8 +11,8 @@ from google.protobuf.json_format import MessageToDict
 
 # Role-specific guidance injected into the interview-question prompt.
 ROLE_GUIDANCE = {
-    "Data Analyst": "Focus on SQL, data validation, dashboarding, KPI design, and stakeholder communication.",
-    "ML Engineer": "Focus on model deployment, MLOps, monitoring, and scaling ML systems.",
+    "Data Analyst": "Focus on basics concepts of SQL, data validation, statistics, Excel, and stakeholder communication.",
+    "ML Engineer": "Focus on basics of Machine Learning, Regression, model deployment and Dimensionality reduction.",
     "Accountant": "Focus on financial reporting, reconciliation, controls, taxation basics, and compliance.",
 }
 
@@ -351,7 +351,7 @@ Resume excerpt:
 Call the provided function.
 Return exactly {count} concise interview questions.
 At least one question must reference the candidate's project/work experience.
-If count is 4, enforce this order: first 2 easy, next 2 moderate.
+If count is 4, enforce this order: all 4 easy questions.
 """
 
     try:
@@ -403,7 +403,7 @@ Student Answer: {answer_text}
 
 Call the provided function.
 Rules:
-- score: 0 to 10
+- score: 0 to 10 (be generous for early attempts but penalize answers that are off-topic)
 - strengths: 2 short points
 - improvements: 2 short points
 - feedback: max 55 words
