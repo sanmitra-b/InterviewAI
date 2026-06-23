@@ -11,13 +11,32 @@ The app uses a **static HTML/CSS/JS frontend**, **Firebase (Auth + Firestore)** 
 
 ---
 
+## Demo
+
+### AI Mock Interview & Dashboard
+
+Here is a snapshot of the AI-powered mock interview session and the performance dashboard.
+
+![AI Mock Questions](https://i.imgur.com/rG3o5yA.png)
+![Dashboard](https://i.imgur.com/8z2a2K7.png)
+
+### Full Demo Video
+
+A full video demonstration of the application's features.
+
+<a href="assets/Demo.mp4" target="_blank">
+  <video src="assets/Demo.mp4" style="max-width: 100%;" />
+</a>
+
+---
+
 ## 1) Architecture Overview
 
 ### High-level flow
 
 ```text
 Browser (HTML/CSS/JS)
-  ├─ Firebase Auth (login/signup/google)
+  ├─ Firebase Auth (login/signup)
   ├─ Firestore (scores, sessions, tracker data)
   └─ Flask API (127.0.0.1:5001)
        ├─ Resume analysis endpoints
@@ -388,18 +407,14 @@ This starts an additional body-language-only API on port `5001`.
 
 ---
 
-## 12) Current Limitations
 
-- `requirements.txt` is currently a full environment snapshot; it may include packages not strictly required by this project.
-- Heavy CV/model processing may be CPU intensive on low-end systems.
-- Frontend and backend are locally coupled by hardcoded API host (`http://127.0.0.1:5001`) in JS modules.
-
----
-
-## 13) Suggested Next Improvements
+## 12) Suggested Next Improvements
 
 - Create a curated `requirements.txt` (or split into `requirements.txt` + `requirements-dev.txt`) with only project dependencies.
 - Move API base URL to a single environment-driven frontend config.
 - Add CI checks (lint + smoke tests).
 - Add structured logging and error monitoring.
 - Add containerized deployment (`Dockerfile` + compose).
+
+---
+
