@@ -17,8 +17,8 @@ The app uses a **static HTML/CSS/JS frontend**, **Firebase (Auth + Firestore)** 
 
 Here is a snapshot of the AI-powered mock interview session and the performance dashboard.
 
-![AI Mock Questions](https://i.imgur.com/rG3o5yA.png)
-![Dashboard](https://i.imgur.com/8z2a2K7.png)
+![AI Mock Questions](assets/MockQuestions.png)
+![Dashboard](assets/Dashboard.png)
 
 ### Full Demo Video
 
