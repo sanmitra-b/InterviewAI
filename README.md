@@ -1,6 +1,6 @@
 # InterviewAI
 
-InterviewAI is a full-stack interview preparation platform with four integrated modules:
+InterviewAI is a full-stack interview platform for student prep with four integrated modules:
 
 - **Resume Analysis** (AI review + job-description match score)
 - **AI Mock Questions** (role-based interview questions + answer evaluation)
