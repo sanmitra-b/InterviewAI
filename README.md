@@ -38,7 +38,7 @@ Browser (HTML/CSS/JS)
        ├─ Practice interview endpoints
        └─ Body language endpoints
             ├─ OpenCV + MediaPipe inference
-            └─ Summary scoring
+            └─ Summary scoring system
 
 Flask also calls Gemini APIs (google-generativeai) with key failover.
 ```
